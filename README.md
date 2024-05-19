@@ -23,3 +23,29 @@ Neofetch supports almost 150 different operating systems. From Linux to Windows,
 
 
 ### More: \[[Dependencies](https://github.com/dylanaraps/neofetch/wiki/Dependencies)\] \[[Installation](https://github.com/dylanaraps/neofetch/wiki/Installation)\] \[[Wiki](https://github.com/dylanaraps/neofetch/wiki)\]
+
+
+import platform
+import psutil
+
+def get_system_info():
+    system_info = {
+        'OS': platform.system(),
+        'Kernel Version': platform.release(),
+        'CPU': platform.processor(),
+        'Memory': round(psutil.virtual_memory().total / (1024 ** 3), 2),  # in GB
+        'Disk Usage': round(psutil.disk_usage('/').total / (1024 ** 3), 2),  # in GB
+        'Network': ', '.join([nic.address for nic in psutil.net_if_addrs().values() if nic[0].family == 2])
+    }
+    return system_info
+
+def format_output(system_info):
+    output = ''
+    for key, value in system_info.items():
+        output += f'{key}: {value}\n'
+    return output
+
+if __name__ == '__main__':
+    system_info = get_system_info()
+    formatted_output = format_output(system_info)
+    print(formatted_output)
